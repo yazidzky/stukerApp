@@ -1,0 +1,34 @@
+{
+  "name": "stuker-app-backend",
+  "version": "1.0.0",
+  "description": "Backend Stuker App – full fitur (auth, order, chat, rating, riwayat, switch role)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "clear-db": "node src/scripts/clear-database.js"
+  },
+  "keywords": [
+    "stuker",
+    "order",
+    "chat",
+    "rating",
+    "switch-role"
+  ],
+  "author": "your-name",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cloudinary": "^1.41.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.5",
+    "nanoid": "^3.3.7",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
