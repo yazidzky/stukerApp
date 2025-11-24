@@ -1,8 +1,7 @@
 {
   "version": 2,
-  "builds": [{ "src": "frontend/package.json", "use": "@vercel/next" }],
   "env": {
-    "BACKEND_URL": "https://stukerapp-production.up.railway.app",
-    "NEXT_PUBLIC_SOCKET_URL": "https://stukerapp-production.up.railway.app"
+    "VITE_BACKEND_URL": "https://stukerapp-production.up.railway.app",
+    "VITE_SOCKET_URL": "https://stukerapp-production.up.railway.app"
   }
 }
