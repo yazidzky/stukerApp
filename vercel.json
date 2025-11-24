@@ -5,6 +5,6 @@
   "buildCommand": "npm run build --prefix frontend",
   "outputDirectory": "frontend/.next",
   "env": {
-    "BACKEND_URL": "https://github.com/yazidzky/stukerApp/tree/main/backend"
+    "BACKEND_URL": "https://stukerapp-production.up.railway.app/"
   }
 }
