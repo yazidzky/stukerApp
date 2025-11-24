@@ -1,9 +1,12 @@
 {
   "version": 2,
-  "framework": "nextjs",
+  "builds": [
+    { "src": "frontend/package.json", "use": "@vercel/next" }
+  ],
+  "installCommand": "npm ci --prefix frontend && npm ci --prefix backend",
   "buildCommand": "npm run build --prefix frontend",
   "outputDirectory": "frontend/.next",
   "env": {
-    "BACKEND_URL": "https://your-backend.example.com"
+    "BACKEND_URL": "https://stuker-app-backend.vercel.app"
   }
 }
