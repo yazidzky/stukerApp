@@ -43,15 +43,15 @@ export default function LoginPage() {
             userData.role.includes("user") &&
             userData.role.includes("stuker")
           ) {
-            router.push("/dashboard");
+            router.replace("/dashboard");
           } else if (userData.role.includes("stuker")) {
-            router.push("/stuker-dashboard");
+            router.replace("/stuker-dashboard");
           } else {
-            router.push("/dashboard");
+            router.replace("/dashboard");
           }
         } else {
           // Default to user dashboard if role is not an array
-          router.push("/dashboard");
+          router.replace("/dashboard");
         }
       }
     } catch (err: unknown) {
