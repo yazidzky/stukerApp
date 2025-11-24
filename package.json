@@ -8,7 +8,7 @@
   "name": "stuker",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "devDependencies": {
     "concurrently": "^8.2.2"
   },
