@@ -36,23 +36,39 @@ export default function RecentHistorySection() {
       const response = await orderAPI.getOrderHistory('stuker');
       
       // Handle response format: { success: true, history: [...] }
-      let historyData: any[] = [];
+      type ApiOrderHistoryItem = {
+        orderId?: string;
+        partnerName?: string;
+        pickupLoc?: string;
+        pickup_location?: string;
+        deliveryLoc?: string;
+        delivery_location?: string;
+        totalPrice?: number;
+        completedAt?: string | null;
+        partnerPicture?: string;
+        rating?: {
+          stars: number;
+          comment?: string;
+          createdAt?: string | Date;
+        } | null;
+      };
+      let historyData: ApiOrderHistoryItem[] = [];
       if (response) {
         if (response.success && Array.isArray(response.history)) {
-          historyData = response.history;
+          historyData = response.history as ApiOrderHistoryItem[];
         } else if (Array.isArray(response)) {
-          historyData = response;
+          historyData = response as ApiOrderHistoryItem[];
         } else if (Array.isArray(response.history)) {
-          historyData = response.history;
+          historyData = response.history as ApiOrderHistoryItem[];
         }
       }
       
       if (historyData && Array.isArray(historyData) && historyData.length > 0) {
         // Filter only completed orders (with completedAt)
-        const completedOrders = historyData.filter((item: any) => item.completedAt);
+        const completedOrders = historyData.filter((item) => item.completedAt);
         
         if (completedOrders.length > 0) {
-          const transformedHistory = completedOrders.slice(0, 3).map((item: any) => ({
+          const transformedHistory: OrderHistoryItem[] = completedOrders.slice(0, 3).map((item) => ({
           order_id: item.orderId || "",
           stuker_nim: user?.nim || "",
           stuker_name: user?.name || "",
@@ -82,7 +98,7 @@ export default function RecentHistorySection() {
       } else {
         setRecentHistory([]);
       }
-    } catch (error: any) {
+    } catch (error) {
       // Error is already handled in getOrderHistory, just set empty array
       console.error("Error fetching recent history:", error);
       setRecentHistory([]);
@@ -189,4 +205,3 @@ export default function RecentHistorySection() {
     </div>
   );
 }
-

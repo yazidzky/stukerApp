@@ -1,30 +1,49 @@
 "use client";
+export const dynamic = 'force-dynamic';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { orderAPI } from "@/utils/function";
 import OrderCard from "./OrderCard";
+import type { OrderHistoryItem } from "./OrderCard";
+
+type ApiOrderHistoryItem = {
+  orderId?: string;
+  partnerName?: string;
+  pickupLoc?: string;
+  pickup_location?: string;
+  deliveryLoc?: string;
+  delivery_location?: string;
+  totalPrice?: number;
+  completedAt?: string | null;
+  partnerPicture?: string;
+  rating?: {
+    stars: number;
+    comment?: string;
+    createdAt?: string | Date;
+  } | null;
+};
 
 export default function HistoryPage() {
   const { user } = useAuth();
-  const [orderHistory, setOrderHistory] = useState<any[]>([]);
+  const [orderHistory, setOrderHistory] = useState<OrderHistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchOrderHistory = async () => {
+  const fetchOrderHistory = useCallback(async () => {
     try {
       setLoading(true);
       // Fetch history as 'stuker' role
       const response = await orderAPI.getOrderHistory('stuker');
       
       // Handle response format: { success: true, history: [...] }
-      let historyData: any[] = [];
+      let historyData: ApiOrderHistoryItem[] = [];
       if (response) {
         if (response.success && Array.isArray(response.history)) {
-          historyData = response.history;
+          historyData = response.history as ApiOrderHistoryItem[];
         } else if (Array.isArray(response)) {
-          historyData = response;
+          historyData = response as ApiOrderHistoryItem[];
         } else if (Array.isArray(response.history)) {
-          historyData = response.history;
+          historyData = response.history as ApiOrderHistoryItem[];
         }
       }
       
@@ -39,7 +58,7 @@ export default function HistoryPage() {
         // Backend already filters for completed orders, but we ensure completedAt exists as safety check
         // Filter only completed orders (with completedAt) - backend should already return only completed
         // Check if completedAt exists and is not null/undefined
-        const completedOrders = historyData.filter((item: any) => {
+        const completedOrders = historyData.filter((item) => {
           const hasCompletedAt = item.completedAt !== null && item.completedAt !== undefined;
           console.log(`Order ${item.orderId}: completedAt =`, item.completedAt, 'hasCompletedAt =', hasCompletedAt);
           return hasCompletedAt;
@@ -49,7 +68,7 @@ export default function HistoryPage() {
         
         if (completedOrders.length > 0) {
           // Transform API response to match component props
-          const transformedHistory = completedOrders.map((item: any) => ({
+          const transformedHistory: OrderHistoryItem[] = completedOrders.map((item) => ({
           order_id: item.orderId || "",
           stuker_nim: user?.nim || "",
           stuker_name: user?.name || "",
@@ -79,9 +98,10 @@ export default function HistoryPage() {
       } else {
         setOrderHistory([]);
       }
-    } catch (error: any) {
+    } catch (error) {
       // Handle 404 gracefully - no orders found is not an error
-      if (error.message && (error.message.includes('404') || error.message.includes('tidak ditemukan'))) {
+      const message = error instanceof Error ? error.message : '';
+      if (message && (message.includes('404') || message.includes('tidak ditemukan'))) {
         console.log("No orders found in history");
         setOrderHistory([]);
       } else {
@@ -91,13 +111,13 @@ export default function HistoryPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     if (user) {
       fetchOrderHistory();
     }
-  }, [user]);
+  }, [user, fetchOrderHistory]);
 
   // Refresh history when window gains focus (user returns to tab/page)
   useEffect(() => {
@@ -111,7 +131,7 @@ export default function HistoryPage() {
     return () => {
       window.removeEventListener('focus', handleFocus);
     };
-  }, [user]);
+  }, [user, fetchOrderHistory]);
 
   if (loading) {
     return (

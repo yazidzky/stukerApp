@@ -130,8 +130,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       localStorage.setItem('user', JSON.stringify(userData));
       // Simpan password asli untuk ditampilkan di profil (untuk keperluan development/testing)
       localStorage.setItem('userPassword', password);
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Login failed');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Login failed';
+      throw new Error(message);
     } finally {
       setLoading(false);
     }
@@ -143,8 +144,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       await authAPI.register(data);
       // Simpan password asli untuk ditampilkan di profil setelah login (untuk keperluan development/testing)
       localStorage.setItem('userPassword', data.password);
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Registration failed');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Registration failed';
+      throw new Error(message);
     } finally {
       setLoading(false);
     }
@@ -171,8 +173,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           localStorage.setItem('token', response.token);
         }
       }
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Role switch failed');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Role switch failed';
+      throw new Error(message);
     } finally {
       setLoading(false);
     }
@@ -191,6 +194,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         if (currentUser) {
           const updatedUser = {
             ...currentUser,
+            nim: currentUser.nim,
             name: profileResponse.user.name,
             phone: profileResponse.user.phone,
             profilePicture: profileResponse.user.profilePicture,
@@ -213,6 +217,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           // Jika tidak ada user di state atau localStorage, tetap update jika ada data
           const updatedUser = {
             id: profileResponse.user._id || profileResponse.user.id,
+            nim: profileResponse.user.nim || '',
             name: profileResponse.user.name,
             phone: profileResponse.user.phone,
             profilePicture: profileResponse.user.profilePicture,

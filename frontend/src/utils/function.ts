@@ -5,8 +5,8 @@ export function limitText(text: string, maxLength: number = 50): string {
   return text.length > maxLength ? text.slice(0, maxLength) + ".." : text;
 }
 
-// API Base URL
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+// API Base URL: use relative '/api' (Next.js rewrites map to backend)
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 // Helper function for API calls
 const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
@@ -102,25 +102,22 @@ const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
     }
 
     return response.json();
-  } catch (error: any) {
-    // Check if this is a network error (not an error we threw ourselves from response handling)
-    const isNetworkError = error?.name === 'TypeError' && 
-                          (error?.message?.includes('fetch') || error?.message?.includes('Failed to fetch'));
-    const isCorsError = error?.message && (error.message.includes('CORS') || error.message.includes('cors'));
-    
-    // Only log actual network/CORS errors, not errors we already handled and logged in response handling
-    // Errors thrown from response handling already have their message and are logged there
+  } catch (error) {
+    const err = error as { name?: string; message?: string; toString?: () => string };
+    const isNetworkError = err?.name === 'TypeError' && 
+                          (err?.message?.includes('fetch') || err?.message?.includes('Failed to fetch'));
+    const isCorsError = !!err?.message && (err.message.includes('CORS') || err.message.includes('cors'));
+
     if (isNetworkError || isCorsError) {
       console.error('[API Error]', {
         endpoint: `${API_BASE_URL}${endpoint}`,
         method: options.method || 'GET',
-        error: error?.message || 'Unknown error',
-        name: error?.name || 'Unknown',
-        errorObject: error,
+        error: err?.message || 'Unknown error',
+        name: err?.name || 'Unknown',
+        errorObject: err,
       });
     }
 
-    // Handle different types of network errors
     if (isNetworkError) {
       const errorMessage = `Tidak dapat terhubung ke server di ${API_BASE_URL}. Pastikan:
 1. Backend server berjalan
@@ -128,18 +125,15 @@ const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
 3. Tidak ada masalah firewall atau network`;
       throw new Error(errorMessage);
     }
-    
-    // Handle CORS errors
+
     if (isCorsError) {
       throw new Error('Error CORS: Pastikan backend server mengizinkan request dari frontend');
     }
-    
-    // Re-throw other errors (these are errors from response handling, already logged there)
-    // Don't log them again here to avoid duplicate logs
-    if (error.message) {
-      throw error;
+
+    if (err?.message) {
+      throw new Error(err.message);
     }
-    throw new Error(`Error tidak diketahui: ${error.toString()}`);
+    throw new Error(`Error tidak diketahui: ${String(err)}`);
   }
 };
 
@@ -238,8 +232,7 @@ export const orderAPI = {
         };
       }
       return response;
-    } catch (error: any) {
-      // Handle other errors gracefully
+    } catch (error) {
       console.error('Error fetching order history:', error);
       return {
         success: true,

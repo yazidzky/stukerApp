@@ -5,7 +5,7 @@ import { Star } from "lucide-react";
 import { limitText } from "@/utils/function";
 
 // 💡 Tipe data pesanan
-interface OrderHistoryItem {
+export interface OrderHistoryItem {
   order_id: string;
   stuker_nim: string;
   customer_nim: string;

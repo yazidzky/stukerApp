@@ -17,7 +17,9 @@ export default function InputSection() {
   };
 
   // Expose form data to parent component
-  (window as any).getOrderFormData = () => formData;
+  (window as unknown as {
+    getOrderFormData?: () => typeof formData;
+  }).getOrderFormData = () => formData;
 
   return (
     <div className="w-[98%] justify-self-center">

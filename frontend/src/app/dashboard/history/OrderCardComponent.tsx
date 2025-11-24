@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Star } from "lucide-react";
 import { limitText } from "@/utils/function";
 
-interface OrderHistoryItem {
+export interface OrderHistoryItem {
   order_id: string;
   stuker_nim: string;
   customer_nim: string;

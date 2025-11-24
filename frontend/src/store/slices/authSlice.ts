@@ -81,10 +81,13 @@ export const login = createAsyncThunk(
 
       return { user: userData, token: response.token };
     } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error && "response" in error
-          ? (error as any).response?.data?.message || "Login failed"
-          : "Login failed";
+      let errorMessage = "Login failed";
+      const maybeAxios = error as { response?: { data?: { message?: string } } };
+      if (maybeAxios && maybeAxios.response && maybeAxios.response.data && typeof maybeAxios.response.data.message === 'string') {
+        errorMessage = maybeAxios.response.data.message;
+      } else if (error instanceof Error && error.message) {
+        errorMessage = error.message;
+      }
       return rejectWithValue(errorMessage);
     }
   }
@@ -106,10 +109,13 @@ export const register = createAsyncThunk(
       await authAPI.register(data);
       return data;
     } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error && "response" in error
-          ? (error as any).response?.data?.message || "Registration failed"
-          : "Registration failed";
+      let errorMessage = "Registration failed";
+      const maybeAxios = error as { response?: { data?: { message?: string } } };
+      if (maybeAxios && maybeAxios.response && maybeAxios.response.data && typeof maybeAxios.response.data.message === 'string') {
+        errorMessage = maybeAxios.response.data.message;
+      } else if (error instanceof Error && error.message) {
+        errorMessage = error.message;
+      }
       return rejectWithValue(errorMessage);
     }
   }
@@ -122,10 +128,13 @@ export const switchRole = createAsyncThunk(
       const response = await authAPI.switchRole({ targetRole });
       return response;
     } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error && "response" in error
-          ? (error as any).response?.data?.message || "Role switch failed"
-          : "Role switch failed";
+      let errorMessage = "Role switch failed";
+      const maybeAxios = error as { response?: { data?: { message?: string } } };
+      if (maybeAxios && maybeAxios.response && maybeAxios.response.data && typeof maybeAxios.response.data.message === 'string') {
+        errorMessage = maybeAxios.response.data.message;
+      } else if (error instanceof Error && error.message) {
+        errorMessage = error.message;
+      }
       return rejectWithValue(errorMessage);
     }
   }

@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = 'force-dynamic';
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -14,10 +15,21 @@ import ActiveOrderHeader from "./ActiveOrderHeader";
 import OrderDetailSection from "./OrderDetailSection";
 import ConfirmFinishButton from "./ConfirmFinishButton";
 
+interface ActiveOrderData {
+  order_id: string;
+  customer_image?: string;
+  customer_name: string;
+  pickup_location: string;
+  delivery_location: string;
+  order_description: string;
+  price_estimation: number;
+  delivery_fee: number;
+}
+
 export default function OrderProcessPage() {
   const router = useRouter();
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [orderData, setOrderData] = useState<any>(null);
+  const [orderData, setOrderData] = useState<ActiveOrderData | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Mencegah back kehalaman sebelumnya
@@ -65,7 +77,7 @@ export default function OrderProcessPage() {
     // Import socket client dynamically
     import('socket.io-client').then(({ default: io }) => {
       const token = localStorage.getItem('token');
-      const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:4000";
+      const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL || (typeof window !== 'undefined' ? window.location.origin : "");
       const socket = io(socketUrl, {
         auth: { token },
         transports: ['websocket', 'polling'],
@@ -101,8 +113,9 @@ export default function OrderProcessPage() {
       localStorage.removeItem("orderNotificationShown");
       // Pass orderId to rating page
       router.push(`/stuker-order/rating?orderId=${orderData.order_id}`);
-    } catch (error: any) {
-      alert(error.message || "Gagal menyelesaikan pesanan");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Gagal menyelesaikan pesanan";
+      alert(message);
     }
   };
 
@@ -139,7 +152,7 @@ export default function OrderProcessPage() {
 
       {/* 🔸 Informasi customer */}
       <CustomerSection
-        stukerImage={orderData.customer_image}
+        stukerImage={orderData.customer_image || "/images/profilePhoto.png"}
         customerRate={49} // Default rating, could be fetched from API
         customerName={orderData.customer_name}
       />

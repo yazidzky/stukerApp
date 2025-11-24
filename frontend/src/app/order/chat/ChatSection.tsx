@@ -75,7 +75,7 @@ export default function ChatSection() {
     }
 
     const socketUrl =
-      process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:4000";
+      process.env.NEXT_PUBLIC_SOCKET_URL || (typeof window !== 'undefined' ? window.location.origin : "");
     const newSocket = io(socketUrl, {
       auth: { token },
       transports: ["websocket", "polling"],

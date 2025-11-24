@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = 'force-dynamic';
 import BottomCTA from "./BottomCTA";
 import HeaderOrder from "./HeaderOrder";
 import InputSection from "./InputSection";
@@ -22,8 +23,14 @@ export default function OrderPage() {
 
   // Calculate total dynamically
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     const updateTotal = () => {
-      const formData = (window as any).getOrderFormData?.();
+      const formData = (window as unknown as {
+        getOrderFormData?: () => {
+          itemPrice: string;
+          deliveryFee: string;
+        };
+      }).getOrderFormData?.();
       if (
         formData &&
         typeof formData === "object" &&

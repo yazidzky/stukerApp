@@ -11,12 +11,23 @@ export default function BottomCTA({ total }: { total: number }) {
   const [loading, setLoading] = useState(false);
 
   const handleCreateOrder = async () => {
+    if (typeof window === 'undefined') {
+      return;
+    }
     if (!isAuthenticated) {
       router.push("/auth");
       return;
     }
 
-    const formData = (window as any).getOrderFormData?.();
+    const formData = (window as unknown as {
+      getOrderFormData?: () => {
+        pickupLoc: string;
+        deliveryLoc: string;
+        description: string;
+        itemPrice: string;
+        deliveryFee: string;
+      };
+    }).getOrderFormData?.();
     if (!formData) {
       alert("Form data tidak ditemukan");
       return;
@@ -45,8 +56,9 @@ export default function BottomCTA({ total }: { total: number }) {
         localStorage.setItem('currentOrderId', response.order.orderId);
       }
       router.push("/order/searching-stuker");
-    } catch (error: any) {
-      alert(error.message || "Gagal membuat pesanan");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Gagal membuat pesanan";
+      alert(message);
     } finally {
       setLoading(false);
     }

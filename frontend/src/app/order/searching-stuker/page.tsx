@@ -1,17 +1,19 @@
 "use client";
+export const dynamic = 'force-dynamic';
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import ButtonPrimary from "@/components/ButtonPrimary";
 import { io } from "socket.io-client";
+import type { Socket } from "socket.io-client";
 import { useAuth } from "@/context/AuthContext";
 import { orderAPI } from "@/utils/function";
 
 export default function SearchingStudent() {
   const router = useRouter();
   const { user } = useAuth();
-  const [socket, setSocket] = useState<any>(null);
+  const [socket, setSocket] = useState<Socket | null>(null);
   const [orderAccepted, setOrderAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -20,7 +22,8 @@ export default function SearchingStudent() {
     if (!user) return;
 
     const token = localStorage.getItem('token');
-    const newSocket = io(process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:4000', {
+    const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL || (typeof window !== 'undefined' ? window.location.origin : '');
+    const newSocket = io(socketUrl, {
       auth: { token }
     });
 
@@ -90,8 +93,9 @@ export default function SearchingStudent() {
               localStorage.removeItem('currentOrderId');
             }
             router.push("/dashboard");
-          } catch (error: any) {
-            alert(error.message || "Gagal membatalkan pesanan");
+          } catch (error) {
+            const message = error instanceof Error ? error.message : "Gagal membatalkan pesanan";
+            alert(message);
           } finally {
             setLoading(false);
           }

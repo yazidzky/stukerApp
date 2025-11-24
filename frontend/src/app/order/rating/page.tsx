@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+export const dynamic = 'force-dynamic';
+
+import { useEffect, useState, Suspense } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
@@ -9,14 +11,20 @@ import RatingStars from "./RatingStars";
 import Button from "@/components/ButtonPrimary";
 import OrderLocationCard from "./OrderLocationCard";
 
-export default function OrderFinishedPage() {
+function OrderFinishedContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, refreshUser } = useAuth();
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<any>(null);
+  interface RatingOrderData {
+    stuker_image: string;
+    stuker_name: string;
+    delivery_location: string;
+    pickup_location: string;
+  }
+  const [data, setData] = useState<RatingOrderData | null>(null);
 
   const orderId = searchParams.get('orderId');
 
@@ -73,9 +81,10 @@ export default function OrderFinishedPage() {
           pickup_location: response.data.pickupLocation,
         });
       }
-    } catch (error: any) {
+    } catch (error) {
       // Only log unexpected errors (not 404s which are handled gracefully)
-      if (error.message && !error.message.includes('tidak ditemukan') && !error.message.includes('404')) {
+      const message = error instanceof Error ? error.message : '';
+      if (message && !message.includes('tidak ditemukan') && !message.includes('404')) {
         console.error("Error fetching order data:", error);
       }
       // Fallback to dummy data
@@ -115,20 +124,16 @@ export default function OrderFinishedPage() {
       // Refresh router untuk memastikan halaman terupdate
       router.refresh();
       router.push("/dashboard");
-    } catch (error: any) {
+    } catch (error) {
       // Extract error message from various error formats
       let errorMessage = "Gagal mengirim rating";
       
-      if (error?.message) {
+      if (error instanceof Error) {
         errorMessage = error.message;
-      } else if (error?.response?.data?.message) {
-        errorMessage = error.response.data.message;
-      } else if (error?.response?.data?.error) {
-        errorMessage = error.response.data.error;
       } else if (typeof error === 'string') {
         errorMessage = error;
-      } else if (error?.toString) {
-        errorMessage = error.toString();
+      } else {
+        errorMessage = String(error);
       }
       
       // Check if it's a duplicate rating error
@@ -202,5 +207,13 @@ export default function OrderFinishedPage() {
         />
       </div>
     </div>
+  );
+}
+
+export default function OrderFinishedPage() {
+  return (
+    <Suspense fallback={<div className="w-full h-[100vh] flex justify-center items-center">Loading...</div>}>
+      <OrderFinishedContent />
+    </Suspense>
   );
 }

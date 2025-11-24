@@ -9,11 +9,12 @@ import Button from "@/components/ButtonPrimary";
 import OrderUnavailableModal from "@/components/OrderUnavailableModal";
 import { orderAPI } from "@/utils/function";
 import { useState } from "react";
+import type { Order } from "@/store/slices/orderSlice";
 
 interface OrderDetailComponentProps {
   setOrderDetailVisibility: (value: boolean) => void;
   orderDetailVisibility: boolean;
-  orderData?: any; // Add orderData prop
+  orderData?: Order | null; // Add orderData prop
   onOrderAccepted?: () => void; // Add callback for refresh
 }
 
@@ -28,11 +29,9 @@ export default function OrderDetailComponent({
   const [showUnavailableModal, setShowUnavailableModal] = useState(false);
 
   // 🔹 Data dummy (sementara) - fallback if no orderData
-  const data = orderData || {
+  const fallbackData = {
     order_id: "001",
     customer_name: "Marip Ramadan",
-    stuker_nim: "1271129111",
-    stuker_name: "Rizky Ramadhan",
     customer_nim: "81829919221",
     pickup_location: "Kantin atas dekat pohon",
     pickupLoc: "Kantin atas dekat pohon",
@@ -48,7 +47,6 @@ export default function OrderDetailComponent({
     total_price_estimation: 15000,
     order_date: "Mei, 5",
     status: "completed",
-    stuker_image: "/images/profilePhoto.png",
     customer_image: "/images/profilePhoto.png",
   };
 
@@ -88,21 +86,21 @@ export default function OrderDetailComponent({
 
         {/* 🔹 Informasi Customer */}
         <CustomerSection
-          customerName={data.customer_name || "Customer"}
-          customerImage={data.customer_image || "/images/profilePhoto.png"}
-          customerRate={data.customer_rate || 0}
+          customerName={(orderData?.customer_name) || fallbackData.customer_name}
+          customerImage={(orderData?.customer_image) || fallbackData.customer_image}
+          customerRate={(orderData?.customer_rate) || fallbackData.customer_rate}
         />
 
         {/* 🔹 Rincian Order dan Pembayaran */}
         <div className="space-y-2 max-h-[60vh] overflow-scroll scrollbar-hide">
           <OrderSummary
-            pickupLocation={data.pickup_location || data.pickupLoc || "Lokasi penjemputan tidak tersedia"}
-            deliveryLocation={data.delivery_location || data.deliveryLoc || "Lokasi pengantaran tidak tersedia"}
-            orderDescription={data.order_description || data.description || "Tidak ada deskripsi"}
+            pickupLocation={(orderData?.pickup_location) || fallbackData.pickup_location || fallbackData.pickupLoc}
+            deliveryLocation={(orderData?.delivery_location) || fallbackData.delivery_location || fallbackData.deliveryLoc}
+            orderDescription={(orderData?.order_description) || fallbackData.order_description || fallbackData.description}
           />
           <PaymentSummary
-            priceEstimation={data.price_estimation || data.itemPrice || 0}
-            deliveryFee={data.delivery_fee || data.deliveryFee || 0}
+            priceEstimation={(orderData?.price_estimation) ?? fallbackData.price_estimation ?? fallbackData.itemPrice}
+            deliveryFee={(orderData?.delivery_fee) ?? fallbackData.delivery_fee ?? fallbackData.deliveryFee}
           />
         </div>
 
@@ -122,9 +120,8 @@ export default function OrderDetailComponent({
                 onOrderAccepted?.();
                 setOrderDetailVisibility(false);
                 router.push("/stuker-order/process");
-              } catch (error: any) {
-                // Check if error is about order not available
-                const errorMessage = error.message || "Gagal menerima pesanan";
+              } catch (error) {
+                const errorMessage = error instanceof Error ? error.message : "Gagal menerima pesanan";
                 if (
                   errorMessage.includes("tidak tersedia") ||
                   errorMessage.includes("sudah diambil") ||
