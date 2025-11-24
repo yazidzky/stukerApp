@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = 'force-dynamic';
 import { useEffect } from "react";
 import { useAppSelector } from "@/store/hooks";
 import { useRouter } from "next/navigation";
