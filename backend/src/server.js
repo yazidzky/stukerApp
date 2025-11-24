@@ -6,6 +6,11 @@ const socketIo = require("socket.io");
 const connectDB = require("./config/db");
 
 const app = express();
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  process.env.FRONTEND_URL_PREVIEW,
+  "http://localhost:3000",
+].filter(Boolean);
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
@@ -30,7 +35,16 @@ app.set("io", io);
 // CORS configuration
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "*",
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      let host = "";
+      try {
+        host = new URL(origin).hostname;
+      } catch {}
+      const allowed =
+        allowedOrigins.includes(origin) || /\.vercel\.app$/.test(host);
+      callback(allowed ? null : new Error("CORS"), allowed);
+    },
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -55,4 +69,7 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
   console.log(`✅ Socket.io server ready`);
+});
+app.get("/", (_req, res) => {
+  res.send("OK");
 });
