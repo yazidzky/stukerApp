@@ -33,26 +33,26 @@ export default function LoginPage() {
       );
 
       if (login.fulfilled.match(resultAction)) {
-        // Get user data from Redux state
         const userData = resultAction.payload.user;
 
-        // Check user role and redirect accordingly
+        let destination = "/dashboard";
         if (userData.role && Array.isArray(userData.role)) {
-          // If user has both roles, default to user dashboard
           if (
             userData.role.includes("user") &&
             userData.role.includes("stuker")
           ) {
-            router.replace("/dashboard");
+            destination = "/dashboard";
           } else if (userData.role.includes("stuker")) {
-            router.replace("/stuker-dashboard");
+            destination = "/stuker-dashboard";
           } else {
-            router.replace("/dashboard");
+            destination = "/dashboard";
           }
-        } else {
-          // Default to user dashboard if role is not an array
-          router.replace("/dashboard");
         }
+
+        try {
+          router.refresh();
+        } catch {}
+        router.push(destination);
       }
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "Login failed";
