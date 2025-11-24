@@ -9,16 +9,16 @@ import WellcomeText from "./WellcomeText";
 import RecentHistorySection from "./RecentHistorySection";
 
 export default function DashboardPage() {
-  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
+  const { user, isAuthenticated, loading } = useAppSelector((state) => state.auth);
   const router = useRouter();
 
   // Redirect if not authenticated
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!loading && !isAuthenticated) {
       router.push("/auth");
       return;
     }
-  }, [isAuthenticated, router]);
+  }, [loading, isAuthenticated, router]);
 
   // Mencegah back kehalaman sebelumnya
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function DashboardPage() {
     },
   ];
 
-  if (!isAuthenticated || !user) {
+  if (loading || !isAuthenticated || !user) {
     return <div>Loading...</div>;
   }
 

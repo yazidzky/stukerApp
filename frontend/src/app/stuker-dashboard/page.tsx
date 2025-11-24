@@ -12,7 +12,7 @@ import { io } from "socket.io-client";
 import type { Order } from "@/store/slices/orderSlice";
 
 export default function StukerDashboard() {
-  const { user, isAuthenticated } = useAppSelector((state) => state.auth);
+  const { user, isAuthenticated, loading: authLoading } = useAppSelector((state) => state.auth);
   const router = useRouter();
   const [activeOrders, setActiveOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,11 +20,11 @@ export default function StukerDashboard() {
 
   // Redirect if not authenticated
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!authLoading && !isAuthenticated) {
       router.push("/auth");
       return;
     }
-  }, [isAuthenticated, router]);
+  }, [authLoading, isAuthenticated, router]);
 
   // Fetch available orders
   const fetchAvailableOrders = useCallback(async () => {
