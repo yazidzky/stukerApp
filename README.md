@@ -107,12 +107,6 @@ CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
 
-# Email (Optional)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your-email@gmail.com
-SMTP_PASSWORD=your-app-password
-
 # Frontend URL
 FRONTEND_URL=http://localhost:3000
 ```
@@ -443,36 +437,6 @@ Kontribusi sangat diterima! Untuk berkontribusi:
 - Pastikan semua test passing sebelum submit PR
 - Gunakan commit message yang descriptive
 
-## 🐛 Bug Reports & Feature Requests
-
-Jika menemukan bug atau ingin request fitur baru:
-
-1. Cek [Issues](https://github.com/yazidzky/stukerApp/issues) yang sudah ada
-2. Jika belum ada, buat issue baru dengan template yang sesuai
-3. Berikan deskripsi yang jelas dan detail
-4. Sertakan screenshot jika memungkinkan
-
-## 📄 License
-
-Project ini dilisensikan under ISC License - lihat file [LICENSE](LICENSE) untuk detail.
-
-## 👥 Tim Pengembang
-
-- **Yazid** - [@yazidzky](https://github.com/yazidzky) - Lead Developer
-
-## 📞 Kontak & Support
-
-- **GitHub Issues**: [stukerApp/issues](https://github.com/yazidzky/stukerApp/issues)
-- **Email**: support@stukerapp.com
-- **Documentation**: [Wiki](https://github.com/yazidzky/stukerApp/wiki)
-
-## 🙏 Acknowledgments
-
-- Terima kasih kepada semua kontributor
-- Inspirasi dari platform freelance seperti Fiverr dan Upwork
-- Community feedback dan suggestions
-- Open source libraries yang digunakan
-
 ## 📈 Roadmap
 
 ### Phase 1 (Current)
@@ -515,18 +479,6 @@ Project ini dilisensikan under ISC License - lihat file [LICENSE](LICENSE) untuk
 - ✅ Image upload (Cloudinary)
 - ✅ Responsive design
 - ✅ Basic notification system
-
-Untuk changelog lengkap, lihat [CHANGELOG.md](CHANGELOG.md)
-
----
-
-## 📚 Additional Resources
-
-- [Database Architecture](docs/DATABASE_ARCHITECTURE.md) - Detailed database schema and relationships
-- [Flowchart Documentation](docs/FLOWCHART.md) - Complete application flow diagrams
-- [API Documentation](docs/API.md) - Full API endpoint documentation
-- [Contributing Guide](CONTRIBUTING.md) - How to contribute to this project
-- [Code of Conduct](CODE_OF_CONDUCT.md) - Community guidelines
 
 ---
 
