@@ -241,3 +241,14 @@ export const orderAPI = {
     }
   },
 };
+
+// Chatbot API
+export const chatbotAPI = {
+  chat: async (message: string, history: any[]) => {
+    return apiRequest('/chatbot/chat', {
+      method: 'POST',
+      body: JSON.stringify({ message, history }),
+    });
+  },
+};
+

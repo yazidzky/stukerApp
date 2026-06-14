@@ -1,4 +1,7 @@
 require("dotenv").config();
+const dns = require("dns");
+dns.setDefaultResultOrder("ipv4first");
+
 const express = require("express");
 const cors = require("cors");
 const http = require("http");
@@ -57,6 +60,7 @@ app.use("/api/auth", require("./routes/auth"));
 app.use("/api/profile", require("./routes/profile"));
 app.use("/api/orders", require("./routes/order"));
 app.use("/api/ratings", require("./routes/rating"));
+app.use("/api/chatbot", require("./routes/chatbot"));
 
 require("./socket/chat")(io);
 

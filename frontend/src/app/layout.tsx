@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { ReduxProvider } from "@/context/ReduxProvider";
 import { AuthProvider } from "@/context/AuthContext";
+import ChatbotButton from "@/components/Chatbot/ChatbotButton";
 
 import "./globals.css";
 
@@ -40,6 +41,7 @@ export default function RootLayout({
             <div className="flex justify-center">
               <div className="max-w-112 min-w-82 w-[100%]">{children}</div>
             </div>
+            <ChatbotButton />
           </ReduxProvider>
         </AuthProvider>
       </body>
