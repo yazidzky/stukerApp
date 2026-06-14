@@ -90,9 +90,9 @@ npm install
 Buat file `.env` di folder backend:
 ```env
 # Database
-MONGODB_URI=mongodb://localhost:27017/stukerapp
+MONGO_URI=mongodb://localhost:27017/stukerapp
 # atau gunakan MongoDB Atlas
-# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/stukerapp
+# MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/stukerapp
 
 # JWT
 JWT_SECRET=your_super_secret_jwt_key_here
