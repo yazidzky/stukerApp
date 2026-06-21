@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import { ReduxProvider } from "@/context/ReduxProvider";
 import { AuthProvider } from "@/context/AuthContext";
-import ChatbotButton from "@/components/Chatbot/ChatbotButton";
 
 import "./globals.css";
 
@@ -17,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-inter", // nanti dipakai di Tailwind
+  variable: "--font-inter", 
   display: "swap",
 });
 
@@ -39,9 +38,11 @@ export default function RootLayout({
         <AuthProvider>
           <ReduxProvider>
             <div className="flex justify-center">
-              <div className="max-w-112 min-w-82 w-[100%]">{children}</div>
+              <div className="max-w-112 min-w-82 w-full relative">{children}
+              </div>
+              
             </div>
-            <ChatbotButton />
+            
           </ReduxProvider>
         </AuthProvider>
       </body>

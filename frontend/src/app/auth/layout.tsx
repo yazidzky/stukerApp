@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+
 export default function LayoutAuthPage({
   children,
 }: {
@@ -10,7 +11,9 @@ export default function LayoutAuthPage({
       <div className="w-[100%] h-[20dvh] bg-[url('/illustrations/doodle.svg')] bg-no-repeat bg-center bg-cover flex justify-center items-center">
         <Image src={"/stuker-logo.svg"} alt="Logo" width={90} height={90} />
       </div>
-      <div>{children}</div>
+      <div>{children}
+        
+      </div>
     </div>
   );
 }

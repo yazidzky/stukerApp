@@ -5,7 +5,7 @@ const Order = require("../models/Order");
 const register = async (req, res) => {
   try {
     const { nim, name, phone, password, confirmPassword } = req.body;
-    if (!nim || !name || !phone || !pass || !confirmPasswordword)
+    if (!nim || !name || !phone || !password)
       return res.status(400).json({ message: "Register Gagal" });
     if (password !== confirmPassword)
       return res
@@ -18,7 +18,7 @@ const register = async (req, res) => {
         .status(400)
         .json({ message: "Password kurang dari 8 karakter" });
     const exists = await User.findOne({ nim });
-    if (exists) return res.status(400).json({ messagage : "Nomor NIM sudah terdaftar"});
+    if (exists) return res.status(400).json({ message: "Nim tidak valid" });
     const user = new User({ nim, name, phone, password });
     await user.save();
     res.json({ message: "Registrasi Berhasil" });

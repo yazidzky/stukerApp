@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";
 import BottomNav from "./BottomNav";
+import ChatbotButton from "@/components/Chatbot/ChatbotButton";
+
 
 export default function StukerDashboardLayout({
   children,
@@ -49,6 +51,7 @@ export default function StukerDashboardLayout({
     <div className=" w-[100%] h-[100dvh] relative">
       <div className="h-[100dvh] overflow-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] ">
         {children}
+        <ChatbotButton />
       </div>
       <BottomNav />
     </div>

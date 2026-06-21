@@ -102,6 +102,9 @@ JWT_EXPIRE=7d
 PORT=5000
 NODE_ENV=development
 
+# API AI
+GEMINI_API_KEY=isi_dengan_api_key_gemini_kamu_di_sini
+
 # Cloudinary
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key

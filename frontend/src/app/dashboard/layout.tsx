@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";
 import BottomNav from "./BottomNav";
+import ChatbotButton from "@/components/Chatbot/ChatbotButton";
+                
 
 export default function DashboardLayout({
   children,
@@ -49,6 +51,8 @@ export default function DashboardLayout({
     <div className=" w-[100%] relative">
       <div className="h-[100dvh] overflow-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
         {children}
+        <ChatbotButton />
+        
       </div>
       <BottomNav />
     </div>

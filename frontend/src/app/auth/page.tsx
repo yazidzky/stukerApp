@@ -7,6 +7,7 @@ import { login } from "@/store/slices/authSlice";
 import ButtonPrimary from "@/components/ButtonPrimary";
 import InputAuth from "@/components/InputAuth";
 
+
 export default function LoginPage() {
   const router = useRouter();
   const dispatch = useAppDispatch();
